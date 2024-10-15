@@ -7,8 +7,14 @@ async function dbConnect() {
     return;
   }
 
+  const mongodbUri = process.env.MONGODB_URI;
+
+  if (!mongodbUri) {
+    throw new Error('A variável de ambiente MONGODB_URI não está definida.');
+  }
+
   try {
-    const db = await mongoose.connect(process.env.MONGODB_URI, {
+    const db = await mongoose.connect(mongodbUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
