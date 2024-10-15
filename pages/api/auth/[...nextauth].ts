@@ -5,13 +5,17 @@ import CredentialsProvider from "next-auth/providers/credentials";
 export default NextAuth({
     providers: [
         CredentialsProvider({
-            // Adicione suas configurações de credenciais aqui
             name: 'Credentials',
             credentials: {
                 username: { label: "Username", type: "text", placeholder: "seu_usuario" },
                 password: { label: "Password", type: "password", placeholder: "sua_senha" },
             },
             async authorize(credentials) {
+                // Verifique se credentials não é undefined
+                if (!credentials) {
+                    return null; // Retorna null se credentials for undefined
+                }
+
                 // Implementação para autenticar o usuário
                 const user = { id: '1', name: 'Admin', email: 'admin@example.com' }; // Exemplo de usuário
 
