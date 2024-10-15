@@ -66,7 +66,7 @@ export default function Register() {
                     </button>
                 </form>
                 <p className="mt-4 text-center text-blue-300">
-                    Já tem uma conta? <a href="/login" className="text-blue-400 hover:underline">Login</a>
+                  Já tem conta? <Link href="/login"  className="text-blue-400 hover:underline">Faça login</Link>
                 </p>
             </div>
         </div>
