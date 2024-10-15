@@ -1,5 +1,3 @@
-
-
 // pages/register.tsx
 import { useState } from 'react';
 import { useRouter } from 'next/router';
@@ -11,7 +9,8 @@ export default function Register() {
     const [password, setPassword] = useState('');
     const router = useRouter();
 
-    const handleRegister = async (e) => {
+    // Adicionando o tipo ao parâmetro 'e'
+    const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const res = await fetch('/api/register', {
@@ -27,6 +26,7 @@ export default function Register() {
         } else {
             const errorData = await res.json();
             console.error(errorData.message);
+            alert('Erro ao registrar. Tente novamente.'); // Adicionando um alerta ao usuário
         }
     };
 
@@ -67,7 +67,7 @@ export default function Register() {
                     </button>
                 </form>
                 <p className="mt-4 text-center text-blue-300">
-                  Já tem conta? <Link href="/login"  className="text-blue-400 hover:underline">Faça login</Link>
+                    Já tem conta? <Link href="/login" className="text-blue-400 hover:underline">Faça login</Link>
                 </p>
             </div>
         </div>
