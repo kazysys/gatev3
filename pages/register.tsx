@@ -3,6 +3,7 @@
 // pages/register.tsx
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 export default function Register() {
     const [username, setUsername] = useState('');
