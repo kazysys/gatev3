@@ -1,6 +1,7 @@
 // pages/login.tsx
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link'; 
 
 export default function Login() {
     const [username, setUsername] = useState('');
