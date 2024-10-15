@@ -2,10 +2,6 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-interface Token {
-    id: string; // Propriedade 'id' do token
-}
-
 export default NextAuth({
     providers: [
         CredentialsProvider({
