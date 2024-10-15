@@ -3,16 +3,24 @@ import { useRouter } from 'next/router';
 import { FaLock, FaUserAlt, FaDesktop } from 'react-icons/fa';
 
 const Dashboard = () => {
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState<any>(null); // Usando 'any' para evitar erros de tipo por enquanto
   const [notification, setNotification] = useState('');
   const [isDisabled, setIsDisabled] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
+      const username = localStorage.getItem('username');
+      
+      // Verifica se o username existe antes de fazer a requisição
+      if (!username) {
+        router.push('/login');
+        return;
+      }
+
       const res = await fetch('/api/user-data', {
         headers: {
-          'username': localStorage.getItem('username'),
+          'username': username,
         },
       });
 
@@ -38,7 +46,7 @@ const Dashboard = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          content: `O usuário da máquina ${userData.machine.ip} solicitou ligamento.`,
+          content: `O usuário da máquina ${userData?.machine?.ip} solicitou ligamento.`, // Usando optional chaining
         }),
       });
 
