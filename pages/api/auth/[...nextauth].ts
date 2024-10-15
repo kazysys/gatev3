@@ -29,7 +29,7 @@ export default NextAuth({
         })
     ],
     session: {
-        jwt: true,
+        // Removendo a propriedade 'jwt'
     },
     callbacks: {
         async jwt({ token, user }) {
