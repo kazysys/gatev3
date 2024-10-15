@@ -1,8 +1,8 @@
 import NextAuth from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials'; // Altere para importar apenas o que precisa
-import User from '../../../models/User'; // Importando seu modelo de usuário
+import CredentialsProvider from 'next-auth/providers/credentials';
+import User from '../../../models/User';
 import dbConnect from '../../../lib/dbConnect';
-import bcrypt from 'bcryptjs'; // Não se esqueça de importar o bcrypt
+import bcrypt from 'bcryptjs';
 
 export default NextAuth({
     providers: [
@@ -15,7 +15,6 @@ export default NextAuth({
             async authorize(credentials) {
                 await dbConnect();
 
-                // Verifica se credentials está definido
                 if (!credentials) {
                     throw new Error('Credenciais não fornecidas');
                 }
@@ -28,9 +27,7 @@ export default NextAuth({
             }
         })
     ],
-    session: {
-        // Removendo a propriedade 'jwt'
-    },
+    session: {},
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
@@ -39,7 +36,9 @@ export default NextAuth({
             return token;
         },
         async session({ session, token }) {
-            session.user.id = token.id;
+            if (session.user) {
+                session.user.id = token.id;
+            }
             return session;
         }
     }
