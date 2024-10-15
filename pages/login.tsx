@@ -60,7 +60,7 @@ export default function Login() {
                     </button>
                 </form>
                 <p className="mt-4 text-center text-blue-300">
-                    Não tem uma conta? <a href="/register" className="text-blue-400 hover:underline">Registrar</a>
+                      Não tem conta? <Link href="/register" className="text-blue-400 hover:underline">Registre-se</Link>
                 </p>
             </div>
         </div>
