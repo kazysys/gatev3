@@ -2,8 +2,19 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { FaLock, FaUserAlt, FaDesktop } from 'react-icons/fa';
 
+// Definindo a interface para o modelo de dados do usuário
+interface Machine {
+  ip: string;
+  username: string;
+  password: string;
+}
+
+interface UserData {
+  machine: Machine | null; // máquina pode ser nula
+}
+
 const Dashboard = () => {
-  const [userData, setUserData] = useState<any>(null); // Usando 'any' para evitar erros de tipo por enquanto
+  const [userData, setUserData] = useState<UserData | null>(null); // Agora usamos UserData
   const [notification, setNotification] = useState('');
   const [isDisabled, setIsDisabled] = useState(false);
   const router = useRouter();
@@ -12,7 +23,6 @@ const Dashboard = () => {
     const fetchData = async () => {
       const username = localStorage.getItem('username');
       
-      // Verifica se o username existe antes de fazer a requisição
       if (!username) {
         router.push('/login');
         return;
@@ -25,7 +35,7 @@ const Dashboard = () => {
       });
 
       if (res.ok) {
-        const data = await res.json();
+        const data: UserData = await res.json(); // Especificando o tipo esperado
         setUserData(data);
       } else {
         router.push('/login');
@@ -46,14 +56,13 @@ const Dashboard = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          content: `O usuário da máquina ${userData?.machine?.ip} solicitou ligamento.`, // Usando optional chaining
+          content: `O usuário da máquina ${userData?.machine?.ip || 'sem IP'} solicitou ligamento.`, // Garantindo que não ocorra erro
         }),
       });
 
       setNotification('Sua máquina será ligada em até 1 hora, fique atento pois pode ser antes.');
       setIsDisabled(true);
       setTimeout(() => setNotification(''), 10000);
-
       setTimeout(() => setIsDisabled(false), 5 * 60 * 60 * 1000); // 5 horas
     } catch (error) {
       console.error('Erro ao enviar a mensagem:', error);
