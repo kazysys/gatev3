@@ -8,7 +8,7 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const router = useRouter();
 
-    const handleLogin = async (e) => {
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const res = await fetch('/api/login', {
@@ -61,7 +61,7 @@ export default function Login() {
                     </button>
                 </form>
                 <p className="mt-4 text-center text-blue-300">
-                      Não tem conta? <Link href="/register" className="text-blue-400 hover:underline">Registre-se</Link>
+                    Não tem conta? <Link href="/register" className="text-blue-400 hover:underline">Registre-se</Link>
                 </p>
             </div>
         </div>
