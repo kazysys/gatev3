@@ -1,41 +1,27 @@
-// pages/api/auth/[...nextauth].ts
-import NextAuth from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials'; // Altere para importar apenas o que precisa
-import User from '../../../models/User'; // Importando seu modelo de usuário
-import dbConnect from '../../../lib/dbConnect';
+import { NextAuthOptions } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import bcrypt from 'bcryptjs';
+import User from '../../../models/User'; // ajuste o caminho conforme necessário
+import dbConnect from '../../../utils/dbConnect'; // ajuste o caminho conforme necessário
 
-export default NextAuth({
-    providers: [
-        CredentialsProvider({
-            name: 'Credentials',
-            credentials: {
-                username: { label: "Usuário", type: "text" },
-                password: { label: "Senha", type: "password" }
-            },
-            async authorize(credentials) {
-                await dbConnect();
-                
-                const user = await User.findOne({ username: credentials.username });
-                if (user && (await bcrypt.compare(credentials.password, user.password))) {
-                    return { id: user._id, name: user.username, email: user.email };
-                }
-                return null;
-            }
-        })
-    ],
-    session: {
-        jwt: true,
-    },
-    callbacks: {
-        async jwt({ token, user }) {
-            if (user) {
-                token.id = user.id;
-            }
-            return token;
-        },
-        async session({ session, token }) {
-            session.user.id = token.id;
-            return session;
+export const authOptions: NextAuthOptions = {
+  providers: [
+    CredentialsProvider({
+      async authorize(credentials) {
+        await dbConnect();
+
+        if (!credentials) {
+          throw new Error("Credenciais não fornecidas");
         }
-    }
-});
+
+        const user = await User.findOne({ username: credentials.username });
+
+        if (user && (await bcrypt.compare(credentials.password, user.password))) {
+          return { id: user._id, name: user.username, email: user.email };
+        }
+
+        throw new Error("Nome de usuário ou senha inválidos");
+      },
+    }),
+  ],
+};
