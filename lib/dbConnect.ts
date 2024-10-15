@@ -15,8 +15,7 @@ async function dbConnect() {
 
   try {
     const db = await mongoose.connect(mongodbUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+      
     });
 
     connection.isConnected = db.connection.readyState === 1; // 1 significa conectado
