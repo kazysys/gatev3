@@ -1,45 +1,49 @@
-import NextAuth from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
-import User from '../../../models/User';
-import dbConnect from '../../../lib/dbConnect';
-import bcrypt from 'bcryptjs';
+// pages/api/auth/[...nextauth].ts
+import NextAuth from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+
+interface Token {
+    id: string; // Propriedade 'id' do token
+}
 
 export default NextAuth({
     providers: [
         CredentialsProvider({
+            // Adicione suas configurações de credenciais aqui
             name: 'Credentials',
             credentials: {
-                username: { label: "Usuário", type: "text" },
-                password: { label: "Senha", type: "password" }
+                username: { label: "Username", type: "text", placeholder: "seu_usuario" },
+                password: { label: "Password", type: "password", placeholder: "sua_senha" },
             },
             async authorize(credentials) {
-                await dbConnect();
+                // Implementação para autenticar o usuário
+                const user = { id: '1', name: 'Admin', email: 'admin@example.com' }; // Exemplo de usuário
 
-                if (!credentials) {
-                    throw new Error('Credenciais não fornecidas');
+                // Se a autenticação falhar, retorne null
+                if (credentials.username === 'seu_usuario' && credentials.password === 'sua_senha') {
+                    return user; // Retorna o usuário se a autenticação for bem-sucedida
+                } else {
+                    return null; // Retorna null se a autenticação falhar
                 }
-
-                const user = await User.findOne({ username: credentials.username });
-                if (user && (await bcrypt.compare(credentials.password, user.password))) {
-                    return { id: user._id, name: user.username, email: user.email };
-                }
-                return null;
-            }
-        })
+            },
+        }),
     ],
-    session: {},
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                token.id = user.id;
+                token.id = user.id; // Armazena o ID do usuário no token
             }
             return token;
         },
         async session({ session, token }) {
             if (session.user) {
-                session.user.id = token.id; // Agora o TypeScript reconhece session.user.id
+                session.user.id = token.id as string; // Define o ID do usuário na sessão
             }
             return session;
-        }
-    }
+        },
+    },
+    pages: {
+        signIn: '/auth/signin', // Customize a página de login, se necessário
+    },
+    secret: process.env.NEXTAUTH_SECRET, // Use uma chave secreta para proteger o NextAuth
 });
