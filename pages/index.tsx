@@ -1,17 +1,25 @@
-const Home = () => {
-    return (
-      <div>
-        <h1>Painel de Administração</h1>
-        <nav>
-          <ul>
-            <li><a href="/admin/add-machine">Adicionar Máquina</a></li>
-            <li><a href="/admin/assign-machine">Associar Máquina</a></li>
-            <li><a href="/admin/user-dashboard">Dashboard do Usuário</a></li>
-          </ul>
-        </nav>
-      </div>
-    );
-  };
-  
-  export default Home;
-  
+import Link from 'next/link';
+
+const HomePage = () => {
+  return (
+    <div>
+      <h1>Página Principal</h1>
+      <nav>
+        <ul>
+          <li>
+            <Link href="/admin/add-machine">
+              <a>Adicionar Máquina</a>
+            </Link>
+          </li>
+          <li>
+            <Link href="/admin/assign-machine">
+              <a>Atribuir Máquina</a>
+            </Link>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  );
+};
+
+export default HomePage;
