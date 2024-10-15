@@ -1,8 +1,8 @@
 import NextAuth from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials'; 
-import User from '../../../models/User'; 
+import CredentialsProvider from 'next-auth/providers/credentials'; // Altere para importar apenas o que precisa
+import User from '../../../models/User'; // Importando seu modelo de usuário
 import dbConnect from '../../../lib/dbConnect';
-import bcrypt from 'bcryptjs'; // Importação do bcrypt
+import bcrypt from 'bcryptjs'; // Não se esqueça de importar o bcrypt
 
 export default NextAuth({
     providers: [
@@ -14,7 +14,12 @@ export default NextAuth({
             },
             async authorize(credentials) {
                 await dbConnect();
-                
+
+                // Verifica se credentials está definido
+                if (!credentials) {
+                    throw new Error('Credenciais não fornecidas');
+                }
+
                 const user = await User.findOne({ username: credentials.username });
                 if (user && (await bcrypt.compare(credentials.password, user.password))) {
                     return { id: user._id, name: user.username, email: user.email };
